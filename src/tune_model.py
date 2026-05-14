@@ -47,16 +47,17 @@ def main() -> None:
     categorical_cols = [c for c in features.columns if c not in numeric_cols]
 
     # Handle missing numeric values just in case
-    numeric_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="median")),
-        ("pass", "passthrough")
-    ])
+    numeric_transformer = Pipeline(
+        steps=[("imputer", SimpleImputer(strategy="median")), ("pass", "passthrough")]
+    )
 
     # Handle missing categories and encode them
-    categorical_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("onehot", OneHotEncoder(handle_unknown="ignore"))
-    ])
+    categorical_transformer = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("onehot", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
 
     preprocessor = ColumnTransformer(
         transformers=[
@@ -67,16 +68,16 @@ def main() -> None:
 
     # Base model
     model = RandomForestClassifier(
-        random_state=RANDOM_STATE,
-        class_weight="balanced",
-        n_jobs=-1
+        random_state=RANDOM_STATE, class_weight="balanced", n_jobs=-1
     )
 
     # Pipeline
-    pipeline = Pipeline(steps=[
-        ("preprocess", preprocessor),
-        ("model", model),
-    ])
+    pipeline = Pipeline(
+        steps=[
+            ("preprocess", preprocessor),
+            ("model", model),
+        ]
+    )
 
     # Search space
     param_dist = {
@@ -99,7 +100,7 @@ def main() -> None:
         cv=cv,
         random_state=RANDOM_STATE,
         n_jobs=-1,
-        verbose=1
+        verbose=1,
     )
 
     search.fit(features, target)

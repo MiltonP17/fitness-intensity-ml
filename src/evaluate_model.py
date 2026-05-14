@@ -9,7 +9,13 @@ import joblib
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+)
 
 
 # Filepaths
@@ -47,10 +53,7 @@ def main() -> None:
 
     # Split the dataset into training and testing sets just like training
     features_train, features_test, target_train, target_test = train_test_split(
-        features, target,
-        test_size=0.2,
-        stratify=target,
-        random_state=RANDOM_STATE
+        features, target, test_size=0.2, stratify=target, random_state=RANDOM_STATE
     )
 
     # Predict on the test set
@@ -58,7 +61,9 @@ def main() -> None:
 
     # Calculate evaluation metrics
     accuracy = accuracy_score(target_test, predictions)
-    precision = precision_score(target_test, predictions, average="weighted", zero_division=0)
+    precision = precision_score(
+        target_test, predictions, average="weighted", zero_division=0
+    )
     recall = recall_score(target_test, predictions, average="weighted", zero_division=0)
     f1 = f1_score(target_test, predictions, average="weighted", zero_division=0)
 
@@ -67,6 +72,7 @@ def main() -> None:
     print(f"Precision: {precision:.4f}")
     print(f"Recall   : {recall:.4f}")
     print(f"F1 Score : {f1:.4f}")
+
 
 if __name__ == "__main__":
     main()

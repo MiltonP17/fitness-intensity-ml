@@ -7,7 +7,7 @@ import os
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-#Filepaths
+# Filepaths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 RAW_PATH = os.path.join(BASE_DIR, "data", "raw_data.xlsx")
@@ -16,7 +16,8 @@ PROCESSED_PATH = os.path.join(BASE_DIR, "data", "processed.csv")
 
 TARGET_COL = "activity_intensity"
 
-#Creates low/moderate/high intensity labels using steps, calories, and active minutes.
+
+# Creates low/moderate/high intensity labels using steps, calories, and active minutes.
 def build_intensity_label(df: pd.DataFrame) -> pd.Series:
     score = pd.Series(0, index=df.index, dtype=int)
 
@@ -33,6 +34,7 @@ def build_intensity_label(df: pd.DataFrame) -> pd.Series:
     labels[score >= s2] = "high"
     return labels
 
+
 def main() -> None:
     # Load raw data
     df = pd.read_excel(RAW_PATH).dropna(how="all")
@@ -42,10 +44,16 @@ def main() -> None:
 
     # Convert important numeric columns to numbers (bad values become NaN)
     numeric_cols = [
-        "Age", "Height (cm)", "Weight (kg)",
-        "Steps_Taken", "Calories_Burned", "Hours_Slept",
-        "Water_Intake (L)", "Active_Minutes",
-        "Heart_Rate (bpm)", "Stress_Level (1-10)"
+        "Age",
+        "Height (cm)",
+        "Weight (kg)",
+        "Steps_Taken",
+        "Calories_Burned",
+        "Hours_Slept",
+        "Water_Intake (L)",
+        "Active_Minutes",
+        "Heart_Rate (bpm)",
+        "Stress_Level (1-10)",
     ]
     for c in numeric_cols:
         if c in df.columns:

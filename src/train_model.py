@@ -15,10 +15,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
 
-#Filepaths
+# Filepaths
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROCESSED_PATH = os.path.join(BASE_DIR,"data", "processed.csv")
-PIPELINE_PATH = os.path.join(BASE_DIR,"artifacts", "pipeline.joblib")
+PROCESSED_PATH = os.path.join(BASE_DIR, "data", "processed.csv")
+PIPELINE_PATH = os.path.join(BASE_DIR, "artifacts", "pipeline.joblib")
 
 TARGET_COL = "activity_intensity"
 RANDOM_STATE = 42
@@ -44,16 +44,17 @@ def main() -> None:
 
     # Encode categorical features for model training
     # Numeric columns are already scaled in preprocess.py, but we still impute just in case.
-    numeric_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="median")),
-        ("pass", "passthrough")
-    ])
+    numeric_transformer = Pipeline(
+        steps=[("imputer", SimpleImputer(strategy="median")), ("pass", "passthrough")]
+    )
 
     # Fill missing categories and encode them for the model
-    categorical_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("onehot", OneHotEncoder(handle_unknown="ignore"))
-    ])
+    categorical_transformer = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("onehot", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
 
     preprocessor = ColumnTransformer(
         transformers=[
@@ -64,23 +65,20 @@ def main() -> None:
 
     # Define a classification model suitable for structured fitness data
     model = RandomForestClassifier(
-        n_estimators=300,
-        random_state=RANDOM_STATE,
-        class_weight="balanced"
+        n_estimators=300, random_state=RANDOM_STATE, class_weight="balanced"
     )
 
     # Combine preprocessing steps and the model into a single pipeline
-    pipeline = Pipeline(steps=[
-        ("preprocess", preprocessor),
-        ("model", model),
-    ])
+    pipeline = Pipeline(
+        steps=[
+            ("preprocess", preprocessor),
+            ("model", model),
+        ]
+    )
 
     # Split the dataset into training and testing sets
     features_train, features_test, target_train, target_test = train_test_split(
-        features, target,
-        test_size=0.2,
-        stratify=target,
-        random_state=RANDOM_STATE
+        features, target, test_size=0.2, stratify=target, random_state=RANDOM_STATE
     )
 
     # Train the model using the training data
@@ -91,6 +89,7 @@ def main() -> None:
 
     print(f"Model pipeline trained and saved to: {PIPELINE_PATH}")
     print("Model training complete. Ready for evaluation.")
+
 
 if __name__ == "__main__":
     main()

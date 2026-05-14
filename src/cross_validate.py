@@ -45,16 +45,17 @@ def main() -> None:
     categorical_cols = [c for c in features.columns if c not in numeric_cols]
 
     # Handle missing numeric values
-    numeric_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="median")),
-        ("pass", "passthrough")
-    ])
+    numeric_transformer = Pipeline(
+        steps=[("imputer", SimpleImputer(strategy="median")), ("pass", "passthrough")]
+    )
 
     # Handle missing categories and encode them
-    categorical_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="most_frequent")),
-        ("onehot", OneHotEncoder(handle_unknown="ignore"))
-    ])
+    categorical_transformer = Pipeline(
+        steps=[
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("onehot", OneHotEncoder(handle_unknown="ignore")),
+        ]
+    )
 
     preprocessor = ColumnTransformer(
         transformers=[
@@ -65,16 +66,16 @@ def main() -> None:
 
     # Define the model
     model = RandomForestClassifier(
-        n_estimators=300,
-        random_state=RANDOM_STATE,
-        class_weight="balanced"
+        n_estimators=300, random_state=RANDOM_STATE, class_weight="balanced"
     )
 
     # Combine preprocessing and model into one pipeline
-    pipeline = Pipeline(steps=[
-        ("preprocess", preprocessor),
-        ("model", model),
-    ])
+    pipeline = Pipeline(
+        steps=[
+            ("preprocess", preprocessor),
+            ("model", model),
+        ]
+    )
 
     # Set up a 5fold cross-validation
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
@@ -86,6 +87,7 @@ def main() -> None:
     print(f"Scores: {scores}")
     print(f"Average: {scores.mean():.4f}")
     print(f"Std Dev: {scores.std():.4f}")
+
 
 if __name__ == "__main__":
     main()
